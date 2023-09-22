@@ -1,0 +1,2 @@
+1) Run VSRecv -o <port_number>
+2) Run VSSend -d <ip>:<port_number> <file1> <file2> <filex>

@@ -1,0 +1,80 @@
+		//processing for no reason... this part could be implemented in GUDPPacket, but no... we shouldn't touch it, because reasons..		//processing for no reason... this part could be implemented in GUDPPacket, but no... we shouldn't touch it, because reasons..		//processing for no reason... this part could be implemented in GUDPPacket, but no... we shouldn't touch it, because reasons...
+		//buffer input...
+		byte[] data = s_packet.getData();
+		s_buffer = ByteBuffer.allocate(s_packet.getLength() + 8);	//allocate memory == packet length + header size
+		s_buffer.order(ByteOrder.BIG_ENDIAN);
+		s_buffer = ByteBuffer.wrap(data, 0, s_packet.getLength());	//put the received packet's data into this f*king s_buffer...
+		//buffer input...
+		int buffer_length = s_buf the header
+		
+		//s_gudppacket.setVersion(s_buffer.getShort(0));
+		//s_gudppacket.setType(s_buffer.getShort(2));
+		//s_gudp the header
+		
+		//s_gudppacket.setVersion(s_buffer.getShort(0));
+		//s_gudppacket.setType(s_buffer.getShort(2));
+		//s_gudp the header
+		
+		//s_gudppacket.setVersion(s_buffer.getShort(0));
+		//s_gudppacket.setType(s_buffer.getShort(2));
+		//s_gudppacket.setSeqno(s_buffer.getInt(4));
+		//given code
+		//s_gudppacket = GUDPPacket.encapsulate(s_packet);	//this is only done for DATA
+		//given code
+		//
+		//end of the processing for no reason...
+		
+		
+		
+		----------------------------------------------------------------------
+		Receive function socket
+		----------------------------------------------------------------------
+		//added code needed in decapsulation
+		//buffer input...
+		byte[] data = r_packet.getData();
+		r_buffer = ByteBuffer.allocate(r_packet.getLength() + 8);		//allocate memory == packet length + header size
+        r_buffer = ByteBuffer.wrap(data, 0, r_packet.getLength());	//put the received packet's data into this f*king r_buffer...
+        r_buffer.order(ByteOrder.BIG_ENDIAN);
+		//buffer input...
+		
+		int buffer_length = r_buffer.position();			//we first write to the buffer then get its length with the .position() method
+		r_gudppacket.setPayloadLength(buffer_length);		//set the payload length
+		
+		r_buffer.position(0);								//now we go back to position 0, to start reading the header
+		
+		r_gudppacket.setVersion(r_buffer.getShort(0));
+		r_gudppacket.setType(r_buffer.getShort(2));
+		r_gudppacket.setSeqno(r_buffer.getInt(4));
+		//
+		//end of the processing for no reason...
+		
+		-------------------------------------------------------------------------
+		Old BSN packet mechanism in send_buffer
+		-------------------------------------------------------------------------
+		//BSN
+		private ByteBuffer BSN_buffer;					//header only, BSN needs no payload
+		private DatagramPacket BSN_packet;
+		//
+		//DatagramPacket constructor -->
+		//DatagramPacket(byte[] buf, int length, SocketAddress address)
+		//Constructs a datagram packet for sending packets of length length to the specified port number on the specified host.
+		
+		//send a BSN packet as the 1st packet upon starting
+		//constructing the BSN header
+		BSN_buffer.putShort(0, (short)1);		//VERSION			position 0, version 1
+		BSN_buffer.putShort(2, (short)2);		//TYPE				position 2, type 2 (==BSN)
+		BSN_buffer.putInt(4, sequence_number);	//SEQUENCE_NUMBER	position 4, randomly generated sequence_number from the constructor
+		BSN_buffer.order(ByteOrder.BIG_ENDIAN);
+		//
+		
+		byte[] BSN_byte_array = new byte[BSN_buffer.remaining()];
+		
+		BSN_packet = new DatagramPacket(BSN_byte_array, 8, socket.getRemoteSocketAddress());
+		try{
+			socket.send(BSN_packet);
+		}
+		catch(Exception e){
+			
+		}
+		
+		

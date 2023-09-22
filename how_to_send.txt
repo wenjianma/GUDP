@@ -1,0 +1,16 @@
+
+encapsulate()
+	ByteBuffer buffer = ByteBuffer.allocate(packet.getLength() + HEADER_SIZE);
+	buffer.order(ByteOrder.BIG_ENDIAN);
+	GUDPPacket gudppacket = new GUDPPacket(buffer);
+	gudppacket.setType(TYPE_DATA);
+	gudppacket.setVersion(GUDP_VERSION);
+	byte[] data = packet.getData();
+	gudppacket.setPayload(data);
+	gudppacket.setSocketAddress((InetSocketAddress) packet.getSocketAddress());
+	return gudppacket;
+
+pack()
+	int totlength = HEADER_SIZE + getPayloadLength();
+	InetSocketAddress socketAddress = getSocketAddress();
+	return new DatagramPacket(getBytes(), totlength, sockaddr);
